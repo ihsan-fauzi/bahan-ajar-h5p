@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar File dari GitHub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 60%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        #loading {
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Daftar File dalam Folder GitHub</h1>
+    <p>Berikut adalah daftar file yang terdapat dalam folder repository GitHub tertentu:</p>
+
+    <input type="text" id="repoInput" placeholder="Masukkan URL Repo GitHub (contoh: owner/repo)">
+    <input type="text" id="pathInput" placeholder="Masukkan Path Folder (contoh: folder/subfolder)">
+    <button id="fetchFiles">Tampilkan File</button>
+
+    <p id="loading" style="display: none;">Memuat data...</p>
+    <table id="fileTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>Nama File</th>
+                <th>Tipe</th>
+                <th>Link</th>
+            </tr>
+        </thead>
+        <tbody id="fileTableBody"></tbody>
+    </table>
+
+    <script>
+        document.getElementById("fetchFiles").addEventListener("click", async () => {
+            const repo = document.getElementById("repoInput").value.trim();
+            const path = document.getElementById("pathInput").value.trim();
+
+            if (!repo) {
+                alert("Silakan masukkan URL repository GitHub!");
+                return;
+            }
+
+            const apiUrl = `https://api.github.com/repos/${repo}/contents/${path}`;
+
+            const loadingIndicator = document.getElementById("loading");
+            const fileTable = document.getElementById("fileTable");
+            const fileTableBody = document.getElementById("fileTableBody");
+
+            // Tampilkan indikator loading
+            loadingIndicator.style.display = "block";
+            fileTable.style.display = "none";
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error("Gagal mengambil data. Periksa URL atau folder yang dimasukkan.");
+                }
+
+                const files = await response.json();
+
+                // Bersihkan tabel
+                fileTableBody.innerHTML = "";
+
+                // Tambahkan file ke tabel
+                files.forEach(file => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${file.name}</td>
+                        <td>${file.type}</td>
+                        <td><a href="${file.html_url}" target="_blank">Lihat</a></td>
+                    `;
+                    fileTableBody.appendChild(row);
+                });
+
+                // Tampilkan tabel
+                fileTable.style.display = "table";
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                // Sembunyikan indikator loading
+                loadingIndicator.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
