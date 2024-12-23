@@ -51,16 +51,8 @@
     </table>
 
     <script>
-        document.getElementById("fetchFiles").addEventListener("click", async () => {
-            const repo = document.getElementById("repoInput").value.trim();
-            const path = document.getElementById("pathInput").value.trim();
-
-            if (!repo) {
-                alert("Silakan masukkan URL repository GitHub!");
-                return;
-            }
-
-            const apiUrl = `https://api.github.com/repos/${repo}/contents/${path}`;
+        $(document).ready(function() {
+            const apiUrl = `https://api.github.com/repos/ihsan-fauzi/bahan-ajar-h5p/contents/`;
 
             const loadingIndicator = document.getElementById("loading");
             const fileTable = document.getElementById("fileTable");
