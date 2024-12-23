@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar File dari GitHub</title>
+    <title>Daftar File dalam Folder GitHub</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,13 +32,9 @@
 </head>
 <body>
     <h1>Daftar File dalam Folder GitHub</h1>
-    <p>Berikut adalah daftar file yang terdapat dalam folder repository GitHub tertentu:</p>
+    <p>Berikut adalah daftar file yang terdapat dalam folder repository GitHub:</p>
 
-    <input type="text" id="repoInput" placeholder="Masukkan URL Repo GitHub (contoh: owner/repo)">
-    <input type="text" id="pathInput" placeholder="Masukkan Path Folder (contoh: folder/subfolder)">
-    <button id="fetchFiles">Tampilkan File</button>
-
-    <p id="loading" style="display: none;">Memuat data...</p>
+    <p id="loading">Memuat data...</p>
     <table id="fileTable" style="display: none;">
         <thead>
             <tr>
@@ -51,16 +47,16 @@
     </table>
 
     <script>
-        $(document).ready(function() {
-            const apiUrl = `https://api.github.com/repos/ihsan-fauzi/bahan-ajar-h5p/contents/`;
+        // Tentukan repository dan path folder di sini
+        const repo = "ihsan-fauzi/bahan-ajar-h5p"; // Format: owner/repo
+        const path = ""; // Path folder dalam repository
+
+        async function fetchFilesFromGitHub() {
+            const apiUrl = `https://api.github.com/repos/${repo}/contents/${path}`;
 
             const loadingIndicator = document.getElementById("loading");
             const fileTable = document.getElementById("fileTable");
             const fileTableBody = document.getElementById("fileTableBody");
-
-            // Tampilkan indikator loading
-            loadingIndicator.style.display = "block";
-            fileTable.style.display = "none";
 
             try {
                 const response = await fetch(apiUrl);
@@ -92,7 +88,10 @@
                 // Sembunyikan indikator loading
                 loadingIndicator.style.display = "none";
             }
-        });
+        }
+
+        // Panggil fungsi saat halaman dimuat
+        document.addEventListener("DOMContentLoaded", fetchFilesFromGitHub);
     </script>
 </body>
 </html>
